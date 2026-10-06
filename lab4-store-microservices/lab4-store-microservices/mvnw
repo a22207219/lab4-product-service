@@ -1,0 +1,21 @@
+#!/bin/sh
+set -e
+MAVEN_VERSION=3.9.16
+MAVEN_HOME="${HOME}/.m2/wrapper/dists/apache-maven-${MAVEN_VERSION}"
+MAVEN_BIN="${MAVEN_HOME}/bin/mvn"
+if [ ! -x "$MAVEN_BIN" ]; then
+  ZIP="${HOME}/.m2/wrapper/dists/apache-maven-${MAVEN_VERSION}-bin.zip"
+  mkdir -p "$(dirname "$ZIP")"
+  if [ ! -f "$ZIP" ]; then
+    command -v curl >/dev/null 2>&1 || { echo "curl is required to bootstrap Maven Wrapper" >&2; exit 1; }
+    curl -fsSL "https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/${MAVEN_VERSION}/apache-maven-${MAVEN_VERSION}-bin.zip" -o "$ZIP"
+  fi
+  command -v unzip >/dev/null 2>&1 || { echo "unzip is required to bootstrap Maven Wrapper" >&2; exit 1; }
+  rm -rf "$MAVEN_HOME" "${HOME}/.m2/wrapper/dists/apache-maven-${MAVEN_VERSION}"
+  mkdir -p "${HOME}/.m2/wrapper/dists/tmp-${MAVEN_VERSION}"
+  unzip -q "$ZIP" -d "${HOME}/.m2/wrapper/dists/tmp-${MAVEN_VERSION}"
+  mkdir -p "$MAVEN_HOME"
+  cp -R "${HOME}/.m2/wrapper/dists/tmp-${MAVEN_VERSION}/apache-maven-${MAVEN_VERSION}/." "$MAVEN_HOME/"
+  rm -rf "${HOME}/.m2/wrapper/dists/tmp-${MAVEN_VERSION}"
+fi
+exec "$MAVEN_BIN" "$@"

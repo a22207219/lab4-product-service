@@ -1,0 +1,11 @@
+CREATE TABLE supplier (
+ id UUID PRIMARY KEY,
+ name VARCHAR(150) NOT NULL,
+ email VARCHAR(254) NOT NULL,
+ phone VARCHAR(30),
+ address VARCHAR(300),
+ active BOOLEAN NOT NULL,
+ created_at TIMESTAMPTZ NOT NULL,
+ updated_at TIMESTAMPTZ NOT NULL,
+ version BIGINT NOT NULL
+);
